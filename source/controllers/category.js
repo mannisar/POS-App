@@ -5,14 +5,16 @@ module.exports = {
     createCategory: async (request, response) => {
         try {
             const {
+                id,
                 name_category
             } = request.body
 
             const data = {
+                id,
                 name_category
             }
             const result = await categoryModel.createCategory(data)
-            funcHelpers.response(response, 200, result)
+            funcHelpers.response(response, 200, 'Create Product Success!')
         } catch (error) {
             console.log(error)
             funcHelpers.cumstomErrorResponse(response, 404, 'Create Category Failed!')
@@ -28,7 +30,7 @@ module.exports = {
                 categoryName
             }
             const result = await categoryModel.readCategory(data)
-            funcHelpers.response(response, 200, 'Read Category Success!')
+            funcHelpers.response(response, 200, result)
         } catch (error) {
             console.log(error)
             funcHelpers.customErrorResponse(response, 404, 'Read Category Failed!')

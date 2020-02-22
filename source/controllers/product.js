@@ -1,3 +1,4 @@
+// const uuidv4 = require('uuid/v4')
 const productModel = require('../models/product')
 const funcHelpers = require('../helpers')
 const {
@@ -8,6 +9,7 @@ module.exports = {
     createProduct: async (request, response) => {
         try {
             const {
+                id,
                 name_product,
                 description,
                 price,
@@ -16,6 +18,7 @@ module.exports = {
             } = request.body
 
             const data = {
+                id,
                 name_product,
                 description,
                 image: `${port}/api/upload/${request.file.filename}`,

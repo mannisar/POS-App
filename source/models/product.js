@@ -14,13 +14,8 @@ module.exports = {
                     connection.query("SELECT * FROM category WHERE id = ?", data.id_category, (error, result) => {
                         if (data.id_category == result[0].id) {
                             connection.query("INSERT INTO product SET ?", data, (error, result) => {
-                                if (!error) {
-                                    console.log('Success Insert Product!');
-                                    resolve(result)
-                                } else {
-                                    console.log('Error Insert Product!');
-                                    reject(error)
-                                }
+                                if (error) reject(new Error(error))
+                                resolve(result)
                             })
                         } else {
                             reject(new Error(error))
@@ -43,14 +38,9 @@ module.exports = {
                     if (error) reject(new Error(error))
                     resolve(result)
                 })
-            } else if (paginateId != null) {
+            } else if (paginateId != null || search != null || sortBy != null) {
                 let paginateStart = ((paginateId * limit) - limit)
                 connection.query('SELECT product.*, category.name_category FROM product INNER JOIN category ON product.id_category = category.id WHERE name_product LIKE "%' + search + '%" ORDER BY ' + sortBy + ' ' + orderBy + ' LIMIT ' + paginateStart + ',' + limit, (error, result) => {
-                    if (error) reject(new Error(error))
-                    resolve(result)
-                })
-            } else if (search != null || sortBy != null) {
-                connection.query('SELECT product.*, category.name_category FROM product INNER JOIN category ON product.id_category = category.id WHERE name_product LIKE "%' + search + '%" ORDER BY ' + sortBy + ' ' + orderBy, (error, result) => {
                     if (error) reject(new Error(error))
                     resolve(result)
                 })

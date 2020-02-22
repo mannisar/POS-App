@@ -1,6 +1,6 @@
-const userModel = require('../models/user')
-const helper = require('../helpers/')
 const JWT = require('jsonwebtoken')
+const userModel = require('../models/user')
+const funcHelpers = require('../helpers/')
 const {
     JWT_KEY
 } = require('../configs/mysql')
@@ -8,9 +8,10 @@ const {
 module.exports = {
     register: async (request, response) => {
         try {
-            const salt = helper.generateSalt(18)
-            const hashPassword = helper.setPassword(request.body.password, salt)
+            const salt = funcHelpers.generateSalt(18)
+            const hashPassword = funcHelpers.setPassword(request.body.password, salt)
             const data = {
+                id: request.body.id,
                 name: request.body.name,
                 email: request.body.email,
                 password: hashPassword.passwordHash,
@@ -20,9 +21,10 @@ module.exports = {
                 data_updated: new Date()
             }
             const result = await userModel.register(data)
-            response.json(result)
+            funcHelpers.response(response, 200, 'Create User Success!')
         } catch (error) {
             console.log(error)
+            funcHelpers.cumstomErrorResponse(response, 404, 'Create User Failed!')
         }
     },
     login: async (request, response) => {
@@ -33,7 +35,7 @@ module.exports = {
 
         const emailValid = await userModel.checkEmail(data.email)
         const dataUser = emailValid[0]
-        const hashPassword = helper.setPassword(data.password, dataUser.salt)
+        const hashPassword = funcHelpers.setPassword(data.password, dataUser.salt)
 
         if (hashPassword.passwordHash === dataUser.password) {
             const token = JWT.sign({
@@ -48,11 +50,9 @@ module.exports = {
 
             dataUser.token = token
 
-            response.json(dataUser)
+            funcHelpers.response(response, 200, dataUser)
         } else {
-            response.json({
-                message: 'Login error!'
-            })
+            funcHelpers.cumstomErrorResponse(response, 404, 'Login Failed!')
         }
     }
 }

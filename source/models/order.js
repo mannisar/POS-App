@@ -15,7 +15,7 @@ module.exports = {
                     // ==========================================
                     if (checkStock >= 0) { // CHECK STOCK PRODUCT (STEP 2)
                         connection.query("UPDATE product SET stock = ? WHERE id = ?", [checkStock, checkProductId]) // REDUCE DATA STOCK PRODUCT (STEP 3)
-                        if (loop == 0) { connection.query("INSERT INTO `order` (id_user) VALUES ('" + data.id_user + "')") } // INSERT DATA ID_USER TO ORDER (STEP 4), LOOP HERE!
+                        if (loop == 0) { connection.query("INSERT INTO `order` (id, id_user) VALUES ('" + data.id_order + "', '" + data.id_user + "')") } // INSERT DATA ID_USER TO ORDER (STEP 4), LOOP HERE!
                         connection.query("SELECT * FROM `order` WHERE id", (error, result) => {
                             // ==========================================
                             // GET ID ORDER

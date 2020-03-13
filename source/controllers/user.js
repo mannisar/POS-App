@@ -6,25 +6,73 @@ const {
 } = require('../configs/mysql')
 
 module.exports = {
-    register: async (request, response) => {
+    createUser: async (request, response) => {
         try {
             const salt = funcHelpers.generateSalt(18)
             const hashPassword = funcHelpers.setPassword(request.body.password, salt)
             const data = {
-                id: request.body.id,
+                //id: request.body.id,
                 name: request.body.name,
                 email: request.body.email,
                 password: hashPassword.passwordHash,
                 salt: hashPassword.salt,
-                id_level: request.body.id_level || '2',
+                role: request.body.role || 'cashier',
                 data_added: new Date(),
                 data_updated: new Date()
             }
-            const result = await userModel.register(data)
-            funcHelpers.response(response, 200, 'Create User Success!')
+            const result = await userModel.createUser(data)
+            funcHelpers.response(response, 200, result)
         } catch (error) {
             console.log(error)
             funcHelpers.cumstomErrorResponse(response, 404, 'Create User Failed!')
+        }
+    },
+    readUser: async (request, response) => {
+        try {
+            const result = await userModel.readUser()
+            funcHelpers.response(response, 200, result)
+        } catch (error) {
+            console.log(error)
+            funcHelpers.customErrorResponse(response, 404, 'Create User Failed!')
+        }
+    },
+    updateUser: async (request, response) => {
+        try {
+            const salt = funcHelpers.generateSalt(18)
+            const hashPassword = funcHelpers.setPassword(request.body.password, salt)
+            const id = request.params.userId
+
+            const {
+                name,
+                email,
+                role,
+            } = request.body
+
+            const data = {
+                id,
+                name,
+                email,
+                password: hashPassword.passwordHash,
+                salt: hashPassword.salt,
+                role,
+                //date_updated: new Date()
+            }
+
+            const result = await userModel.updateUser(data)
+            funcHelpers.response(response, 200, result)
+        } catch (error) {
+            console.log(error)
+            funcHelpers.cumstomErrorResponse(response, 404, 'Update User Failed!')
+        }
+    },
+    deleteUser: async (request, response) => {
+        try {
+            const data = request.params.userId
+            const result = await userModel.deleteUser(data)
+            funcHelpers.response(response, 200, result)
+        } catch (error) {
+            console.log(error)
+            funcHelpers.cumstomErrorResponse(response, 404, 'Delete User Failed!')
         }
     },
     login: async (request, response) => {
@@ -52,7 +100,7 @@ module.exports = {
 
             funcHelpers.response(response, 200, dataUser)
         } else {
-            funcHelpers.cumstomErrorResponse(response, 404, 'Login Failed!')
+            funcHelpers.cumstomErrorResponse(response, 404, 'Login User Failed!')
         }
     }
 }

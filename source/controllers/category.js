@@ -1,20 +1,21 @@
 const categoryModel = require('../models/category')
 const funcHelpers = require('../helpers')
+// const uuid = require('uuid/v4')
 
 module.exports = {
     createCategory: async (request, response) => {
         try {
+            //let id = uuid()
             const {
-                id,
                 name_category
             } = request.body
 
             const data = {
-                id,
+                //id,
                 name_category
             }
             const result = await categoryModel.createCategory(data)
-            funcHelpers.response(response, 200, 'Create Product Success!')
+            funcHelpers.response(response, 200, result)
         } catch (error) {
             console.log(error)
             funcHelpers.cumstomErrorResponse(response, 404, 'Create Category Failed!')
@@ -38,18 +39,17 @@ module.exports = {
     },
     updateCategory: async (request, response) => {
         try {
+            const id = request.params.categoryId
             const {
-                id,
                 name_category
             } = request.body
-            const categoryId = request.params.categoryId
 
             const data = {
                 id,
                 name_category
             }
-            const result = await categoryModel.updateCategory([data, categoryId])
-            funcHelpers.response(response, 200, 'Update Category Success!')
+            const result = await categoryModel.updateCategory(data)
+            funcHelpers.response(response, 200, result)
         } catch (error) {
             console.log(error)
             funcHelpers.cumstomErrorResponse(response, 404, 'Update Category Failed!')
@@ -57,9 +57,9 @@ module.exports = {
     },
     deleteCategory: async (request, response) => {
         try {
-            const categoryId = request.params.categoryId
-            const result = await categoryModel.deleteCategory(categoryId)
-            funcHelpers.response(response, 200, 'Delete Category Success!')
+            const data = request.params.categoryId
+            const result = await categoryModel.deleteCategory(data)
+            funcHelpers.response(response, 200, result)
         } catch (error) {
             console.log(error)
             funcHelpers.cumstomErrorResponse(response, 404, 'Delete Category Failed!')

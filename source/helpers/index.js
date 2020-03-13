@@ -14,12 +14,26 @@ module.exports = {
             passwordHash: value
         }
     },
-    response: (response, status, data) => {
-        const result = {}
+    responsePaginate: (response, status, data, paginateId, paginateTab) => {
+        var result = {}
+        var tab = []
+
+        for (var i = 1; i <= paginateTab.amount; i++) {
+            tab[i - 1] = i
+        }
 
         result.status = status || 200
         result.result = data
-        // result.page = page
+        result.page = paginateId
+        result.amount = tab
+
+        return response.status(result.status).json(result)
+    },
+    response: (response, status, data) => {
+        var result = {}
+
+        result.status = status || 200
+        result.result = data
 
         return response.status(result.status).json(result)
     },

@@ -3,7 +3,9 @@ const connection = require('../configs/db')
 module.exports = {
     createCategory: (data) => {
         return new Promise((resolve, reject) => {
-            connection.query(`INSERT INTO category SET ?`, data, (error, result) => {
+            connection.query('ALTER TABLE category AUTO_INCREMENT=0')
+            connection.query(`INSERT INTO category SET ?`, data)
+            connection.query('SELECT * FROM category', (error, result) => {
                 if (error) reject(new Error(error))
                 resolve(result)
             })
@@ -27,15 +29,19 @@ module.exports = {
     },
     updateCategory: (data) => {
         return new Promise((resolve, reject) => {
-            connection.query(`UPDATE category SET ? WHERE id = ?`, data, (error, result) => {
+            connection.query('UPDATE category SET ? WHERE id = ?', [data, data.id])
+            connection.query('SELECT * FROM category', (error, result) => {
                 if (error) reject(new Error(error))
                 resolve(result)
             })
         })
     },
-    deleteCategory: (categoryId) => {
+    deleteCategory: (data) => {
         return new Promise((resolve, reject) => {
-            connection.query(`DELETE FROM category WHERE id = ?`, categoryId, (error, result) => {
+            connection.query(`DELETE FROM category WHERE id = ?`, data)
+            connection.query('ALTER TABLE category DROP id') // product.id
+            connection.query('ALTER TABLE category ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST') //
+            connection.query('SELECT * FROM category', (error, result) => {
                 if (error) reject(new Error(error))
                 resolve(result)
             })

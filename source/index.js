@@ -11,6 +11,6 @@ Route
     .use('/api/upload', express.static('./upload'))
     .use('/api/', categoryRouter)
     .use('/api/', orderRouter)
-    .use('/api/user/', userRouter)
+    .use('/api/', userRouter)
 
 module.exports = Route

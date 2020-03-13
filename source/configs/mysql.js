@@ -8,5 +8,6 @@ module.exports = {
         database: process.env.DB_NAME
     },
     port: process.env.PORT,
+    url: process.env.URL,
     JWT_KEY: process.env.JWT_KEY
 }
